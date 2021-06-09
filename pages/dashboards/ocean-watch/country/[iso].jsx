@@ -1,15 +1,27 @@
 import {
   useMemo,
+  useEffect,
 } from 'react';
 import classnames from 'classnames';
 import {
   useQuery,
 } from 'react-query';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
+import {
+  Link as ScrollLink,
+  Button,
+  Element,
+  Events,
+  animateScroll as scroll,
+  scrollSpy,
+  scroller,
+} from 'react-scroll';
 import { v4 as uuidv4 } from 'uuid';
 
 // components
 import LayoutOceanWatch from 'layout/layout/ocean-watch';
+import Tabs from 'components/ui/Tabs';
 import MiniExplore from 'components/mini-explore';
 import CardIndicatorSet from 'components/card-indicator-set';
 import CardIndicator from 'components/card-indicator-set/card-indicator';
@@ -18,12 +30,15 @@ import CardIndicator from 'components/card-indicator-set/card-indicator';
 import { fetchConfigFile } from 'services/ocean-watch';
 
 export default function OceanWatchCountryProfilePage() {
-  // todo: move this fetching to getStaticProps function when getInitialProps is gone
+  const router = useRouter();
   const {
     query: {
       iso,
     },
-  } = useRouter();
+    // pathname,
+  } = router;
+
+  // todo: move this fetching to getStaticProps function when getInitialProps is gone
   const {
     data: oceanWatchConfig,
   } = useQuery(
@@ -41,6 +56,72 @@ export default function OceanWatchCountryProfilePage() {
 
   const indicatorSetConfiguration = useMemo(() => oceanWatchConfig['country-profile']
     .find((rowContent) => !!rowContent.find((blockContent) => blockContent.visualizationType === 'indicators-set'))?.[0], [oceanWatchConfig]);
+
+  const anchors = useMemo(() => {
+    const {
+      asPath,
+    } = router;
+
+    return [
+      {
+        label: 'Ecosystems and Pressures',
+        // route: `${asPath.split('#')[0]}#ecosystems-pressures`,
+        value: 'ecosystems-pressures',
+      },
+      {
+        label: 'Catchment Areas and Land Cover',
+        // route: `${asPath.split('#')[0]}#catchment-areas-land-cover`,
+        value: 'catchment-areas-land-cover',
+      },
+    ];
+  }, [router]);
+
+  const onClickTab = (value) => {
+    scroller.scrollTo(value, {
+      smooth: true,
+    });
+  };
+
+  useEffect(() => {
+    Events.scrollEvent.register('begin', (to) => {
+      const {
+        pathname,
+        query,
+        asPath,
+      } = router;
+
+      console.log(router)
+
+      router.push(
+        `${asPath.split('#')[0]}#${to}`,
+        // `${asPath.split('#')[0]}#${to}`,
+        undefined,
+        {
+          shallow: true,
+        },
+      );
+    });
+
+    return () => {
+      Events.scrollEvent.remove('begin');
+    };
+  }, [router, iso]);
+
+  useEffect(() => {
+    const {
+      asPath,
+    } = router;
+
+    const anchor = asPath.split('#')[1];
+
+    console.log('anchor', anchor);
+
+    if (!anchor) return null;
+
+    scroller.scrollTo(anchor, {
+      smooth: true,
+    });
+  }, [router]);
 
   return (
     <LayoutOceanWatch
@@ -74,6 +155,19 @@ export default function OceanWatchCountryProfilePage() {
             </div>
           </div>
         </div>
+        <Tabs
+          options={anchors}
+          onChange={onClickTab}
+          className="-dark"
+          // defaultSelected={pathname}
+          // selected={pathname}
+        />
+        {/* <ScrollLink
+          to="ecosystems-pressures"
+          smooth
+        >
+          Ecosystems and Pressures
+        </ScrollLink> */}
       </section>
       <div className="l-container">
         {oceanWatchConfig['country-profile'].map((rowContent) => (
@@ -92,11 +186,16 @@ export default function OceanWatchCountryProfilePage() {
                       'medium-6': blockContent.grid === '50%',
                     })}
                   >
-                    {blockContent.title && (
-                      <h2>
+                    {blockContent.anchor && (
+                      <Element name={blockContent.anchor}>
+                        <h2 id={blockContent.anchor}>{blockContent.title}</h2>
+                      </Element>
+                    )}
+                    {/* {blockContent.title && (
+                      <h2 id={blockContent.anchor}>
                         {blockContent.title}
                       </h2>
-                    )}
+                    )} */}
                     {blockContent.text && (
                       <p>
                         {blockContent.text}

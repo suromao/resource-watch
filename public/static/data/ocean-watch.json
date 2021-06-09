@@ -248,7 +248,15 @@
       [
         {
           "grid": "100%",
-          "title": "Ecosystems and Pressures"
+          "title": "Catchment Areas and Land Cover",
+          "anchor": "catchment-areas-land-cover"
+        }
+      ],
+      [
+        {
+          "grid": "100%",
+          "title": "Ecosystems and Pressures",
+          "anchor": "ecosystems-pressures"
         },
         {
           "grid": "50%",
