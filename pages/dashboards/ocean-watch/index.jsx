@@ -1,7 +1,33 @@
+import dynamic from 'next/dynamic';
+import {
+  useQuery,
+} from 'react-query';
+
 // components
 import LayoutOceanWatch from 'layout/layout/ocean-watch';
 
+// services
+import {
+  fetchConfigFile,
+} from 'services/ocean-watch';
+
+const OceanWatchStoryTelling = dynamic(() => import('../../../layout/layout/ocean-watch/storytelling'), { ssr: false });
+
 export default function OceanWatchIntroPage() {
+  const {
+    data: oceanWatchConfig,
+  } = useQuery(
+    ['ocean-watch-config-file'],
+    () => fetchConfigFile(),
+    {
+      refetchOnWindowFocus: false,
+      placeholderData: {
+        intro: [],
+      },
+      initialStale: true,
+    },
+  );
+
   return (
     <LayoutOceanWatch
       title="Ocean Watch – Introduction"
@@ -24,6 +50,18 @@ export default function OceanWatchIntroPage() {
             </div>
           </div>
         </section>
+      </div>
+      <div style={{
+        // background: '#0F4573',
+        background: 'linear-gradient(transparent, #0F4573)',
+      }}
+      >
+        <OceanWatchStoryTelling
+          indicators={oceanWatchConfig.intro.indicators}
+        />
+      </div>
+      <div style={{ height: 500 }}>
+        map goes here
       </div>
     </LayoutOceanWatch>
   );
