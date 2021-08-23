@@ -3,6 +3,7 @@ import {
   withRedux,
   withUserServerSide,
   withAdminRole,
+  withBasicAuth,
 } from 'hoc/auth';
 
 // components
@@ -12,4 +13,4 @@ export default function AdminDataDetailPage() {
   return (<LayoutAdminDataDetail />);
 }
 
-export const getServerSideProps = withRedux(withUserServerSide(withAdminRole()));
+export const getServerSideProps = withBasicAuth(withRedux(withUserServerSide(withAdminRole())));

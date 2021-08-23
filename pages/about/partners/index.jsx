@@ -5,6 +5,7 @@ import { getPartners } from 'redactions/admin/partners';
 import {
   withRedux,
   withUserServerSide,
+  withBasicAuth,
 } from 'hoc/auth';
 
 // components
@@ -14,7 +15,7 @@ export default function PartnersPage() {
   return (<LayoutPartners />);
 }
 
-export const getServerSideProps = withRedux(withUserServerSide(async ({ store }) => {
+export const getServerSideProps = withBasicAuth(withRedux(withUserServerSide(async ({ store }) => {
   const { dispatch, getState } = store;
   const { partners: { published } } = getState();
 
@@ -23,4 +24,4 @@ export const getServerSideProps = withRedux(withUserServerSide(async ({ store })
   return ({
     props: ({}),
   });
-}));
+})));

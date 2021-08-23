@@ -9,6 +9,7 @@ import {
   withRedux,
   withUserServerSide,
   withAuthentication,
+  withBasicAuth,
 } from 'hoc/auth';
 
 // actions
@@ -29,7 +30,9 @@ MyRWDetailPage.propTypes = {
   getUserAreas: PropTypes.func.isRequired,
 };
 
-export const getServerSideProps = withRedux(withUserServerSide(withAuthentication()));
+export const getServerSideProps = withBasicAuth(
+  withRedux(withUserServerSide(withAuthentication())),
+);
 
 export default connect(
   null,

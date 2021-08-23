@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import {
   withRedux,
   withUserServerSide,
+  withBasicAuth,
 } from 'hoc/auth';
 
 // actions
@@ -46,26 +47,28 @@ class SearchPage extends PureComponent {
   }
 }
 
-export const getServerSideProps = withRedux(withUserServerSide(async ({ store, query }) => {
-  const {
-    dispatch,
-  } = store;
-  const {
-    term,
-    page,
-  } = query;
+export const getServerSideProps = withBasicAuth(
+  withRedux(withUserServerSide(async ({ store, query }) => {
+    const {
+      dispatch,
+    } = store;
+    const {
+      term,
+      page,
+    } = query;
 
-  if (page) dispatch(actions.setSearchPage(+page));
+    if (page) dispatch(actions.setSearchPage(+page));
 
-  if (term) {
-    dispatch(actions.setSearchTerm(term));
-    await dispatch(actions.fetchSearch());
-  }
+    if (term) {
+      dispatch(actions.setSearchTerm(term));
+      await dispatch(actions.fetchSearch());
+    }
 
-  return ({
-    props: ({}),
-  });
-}));
+    return ({
+      props: ({}),
+    });
+  })),
+);
 
 export default connect(
   (state) => ({ ...state.search }),

@@ -4,6 +4,11 @@ import {
   useQuery,
 } from 'react-query';
 
+// hoc
+import {
+  withBasicAuth,
+} from 'hoc/auth';
+
 // components
 import LayoutOceanWatch from 'layout/layout/ocean-watch';
 import Header from 'layout/header';
@@ -248,3 +253,5 @@ export async function getStaticProps() {
     props: {},
   };
 }
+
+export const getServerSideProps = withBasicAuth();

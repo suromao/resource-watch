@@ -5,6 +5,7 @@ import { setEmbed } from 'redactions/common';
 import {
   withRedux,
   withUserServerSide,
+  withBasicAuth,
 } from 'hoc/auth';
 
 // components
@@ -17,19 +18,21 @@ export default function EmbedDatasetPage(props) {
   return (<LayoutEmbedDataset {...props} />);
 }
 
-export const getServerSideProps = withRedux(withUserServerSide(async ({ store, query }) => {
-  const { dispatch } = store;
-  const {
-    id,
-  } = query;
+export const getServerSideProps = withBasicAuth(
+  withRedux(withUserServerSide(async ({ store, query }) => {
+    const { dispatch } = store;
+    const {
+      id,
+    } = query;
 
-  dispatch(setEmbed(true));
+    dispatch(setEmbed(true));
 
-  const dataset = await fetchDataset(id, { includes: 'widget, metadata' });
+    const dataset = await fetchDataset(id, { includes: 'widget, metadata' });
 
-  return ({
-    props: ({
-      dataset,
-    }),
-  });
-}));
+    return ({
+      props: ({
+        dataset,
+      }),
+    });
+  })),
+);

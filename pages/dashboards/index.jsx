@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import {
   withRedux,
   withUserServerSide,
+  withBasicAuth,
 } from 'hoc/auth';
 
 // services
@@ -18,7 +19,7 @@ export default function DashboardsPage({ dataPage }) {
   return (<LayoutDashboards dataPage={dataPage} />);
 }
 
-export const getServerSideProps = withRedux(withUserServerSide(async () => {
+export const getServerSideProps = withBasicAuth(withRedux(withUserServerSide(async () => {
   const dataPage = await fetchPage('dashboards');
 
   return ({
@@ -26,7 +27,7 @@ export const getServerSideProps = withRedux(withUserServerSide(async () => {
       dataPage,
     }),
   });
-}));
+})));
 
 DashboardsPage.propTypes = {
   dataPage: PropTypes.shape({}).isRequired,

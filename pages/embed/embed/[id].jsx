@@ -9,6 +9,7 @@ import {
 import {
   withRedux,
   withUserServerSide,
+  withBasicAuth,
 } from 'hoc/auth';
 
 // components
@@ -18,7 +19,7 @@ export default function EmbedEmbedPage(props) {
   return (<LayoutEmbedEmbed {...props} />);
 }
 
-export const getServerSideProps = withRedux(withUserServerSide(async ({
+export const getServerSideProps = withBasicAuth(withRedux(withUserServerSide(async ({
   store,
   req,
   query,
@@ -44,4 +45,4 @@ export const getServerSideProps = withRedux(withUserServerSide(async ({
       referer: req.headers.referer,
     }),
   });
-}));
+})));

@@ -2,6 +2,7 @@ import {
   getSession,
   useSession,
 } from 'next-auth/client';
+import auth from 'basic-auth';
 
 import { QueryClient } from 'react-query';
 import { dehydrate } from 'react-query/hydration';
@@ -23,6 +24,45 @@ import wrapper from 'lib/store';
 import { setUser } from 'redactions/user';
 
 const queryClient = new QueryClient();
+
+export function withBasicAuth(getServerSidePropsFunc) {
+  return async (context) => {
+    const {
+      req,
+      res,
+    } = context;
+    if (
+      !/(AddSearchBot)|(HeadlessChrome)/.test(req.headers['user-agent'])
+      && process.env.NODE_ENV === 'production'
+      && process.env.RW_USERNAME
+      && process.env.RW_PASSWORD
+    ) {
+      const user = auth(req);
+      let authorized = false;
+      if (
+        user && (user.name === process.env.RW_USERNAME && user.pass === process.env.RW_PASSWORD)
+      ) {
+        authorized = true;
+      }
+
+      if (!authorized) {
+        res.statusCode = 401;
+        res.setHeader('WWW-Authenticate', 'Basic realm=Authorization Required');
+        res.end(JSON.stringify('Unauthorized'));
+
+        return {
+          props: ({}),
+        };
+      }
+    }
+
+    const SSPF = await getServerSidePropsFunc(context);
+
+    return ({
+      ...SSPF,
+    });
+  };
+}
 
 export function withAuthentication(getServerSidePropsFunc) {
   return async (context) => {

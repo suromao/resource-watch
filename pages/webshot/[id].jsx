@@ -3,11 +3,16 @@ import {
   fetchWidget,
 } from 'services/widget';
 
+// hoc
+import {
+  withBasicAuth,
+} from 'hoc/auth';
+
 export default function Webshot() {
   return null;
 }
 
-export const getServerSideProps = async ({ query }) => {
+export const getServerSideProps = withBasicAuth(async ({ query }) => {
   const {
     id,
   } = query;
@@ -24,4 +29,4 @@ export const getServerSideProps = async ({ query }) => {
       permanent: true,
     },
   });
-};
+});

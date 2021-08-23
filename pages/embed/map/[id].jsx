@@ -3,6 +3,11 @@ import { useRouter } from 'next/router';
 // components
 import LayoutEmbedMap from 'layout/embed/map';
 
+// hoc
+import {
+  withBasicAuth,
+} from 'hoc/auth';
+
 // hooks
 import { useFetchWidget } from 'hooks/widget';
 import useFetchLayer from 'hooks/layer/fetch-layer';
@@ -43,5 +48,7 @@ const EmbedMapPage = () => {
     />
   );
 };
+
+export const getServerSideProps = withBasicAuth;
 
 export default EmbedMapPage;

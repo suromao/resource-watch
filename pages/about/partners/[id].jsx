@@ -5,6 +5,7 @@ import { getPartner, getDatasetsByPartner } from 'modules/partners/actions';
 import {
   withRedux,
   withUserServerSide,
+  withBasicAuth,
 } from 'hoc/auth';
 
 // components
@@ -16,15 +17,17 @@ import { PARTNERS_CONNECTIONS } from 'constants/partners';
 export default function PartnerDetailPage() {
   return (<LayoutPartnerDetail />);
 }
-export const getServerSideProps = withRedux(withUserServerSide(async ({ query, store }) => {
-  const { id } = query;
-  await store.dispatch(getPartner(id));
+export const getServerSideProps = withBasicAuth(
+  withRedux(withUserServerSide(async ({ query, store }) => {
+    const { id } = query;
+    await store.dispatch(getPartner(id));
 
-  if (PARTNERS_CONNECTIONS[id]) {
-    await store.dispatch(getDatasetsByPartner(PARTNERS_CONNECTIONS[id]));
-  }
+    if (PARTNERS_CONNECTIONS[id]) {
+      await store.dispatch(getDatasetsByPartner(PARTNERS_CONNECTIONS[id]));
+    }
 
-  return ({
-    props: ({}),
-  });
-}));
+    return ({
+      props: ({}),
+    });
+  })),
+);

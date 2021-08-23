@@ -5,6 +5,7 @@ import { getFaqs } from 'redactions/admin/faqs';
 import {
   withRedux,
   withUserServerSide,
+  withBasicAuth,
 } from 'hoc/auth';
 
 // components
@@ -14,7 +15,7 @@ export default function FaqsPage() {
   return (<LayoutFaqs />);
 }
 
-export const getServerSideProps = withRedux(withUserServerSide(async ({ store }) => {
+export const getServerSideProps = withBasicAuth(withRedux(withUserServerSide(async ({ store }) => {
   const { getState, dispatch } = store;
   const { faqs: { list } } = getState();
 
@@ -23,4 +24,4 @@ export const getServerSideProps = withRedux(withUserServerSide(async ({ store })
   return ({
     props: ({}),
   });
-}));
+})));

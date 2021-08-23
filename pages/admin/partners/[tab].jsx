@@ -12,6 +12,7 @@ import {
   withRedux,
   withUserServerSide,
   withAdminRole,
+  withBasicAuth,
 } from 'hoc/auth';
 
 // components
@@ -29,7 +30,7 @@ AdminPartnersPage.propTypes = {
   getAllPartners: PropTypes.func.isRequired,
 };
 
-export const getServerSideProps = withRedux(withUserServerSide(withAdminRole()));
+export const getServerSideProps = withBasicAuth(withRedux(withUserServerSide(withAdminRole())));
 
 export default connect(
   null,

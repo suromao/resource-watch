@@ -2,6 +2,11 @@ import {
   getSession,
 } from 'next-auth/client';
 
+// hoc
+import {
+  withBasicAuth,
+} from 'hoc/auth';
+
 // components
 import SignIn from 'layout/sign-in';
 
@@ -9,7 +14,7 @@ export default function SignInPage() {
   return (<SignIn />);
 }
 
-export async function getServerSideProps(context) {
+export const getServerSideProps = withBasicAuth(async (context) => {
   const session = await getSession(context);
   const {
     query: {
@@ -30,4 +35,4 @@ export async function getServerSideProps(context) {
   return {
     props: ({}),
   };
-}
+});

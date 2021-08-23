@@ -15,6 +15,7 @@ import {
   withRedux,
   withUserServerSide,
   withAdminRole,
+  withBasicAuth,
 } from 'hoc/auth';
 
 // hooks
@@ -85,4 +86,4 @@ export default function AdminDashboardsDetailPage() {
   );
 }
 
-export const getServerSideProps = withRedux(withUserServerSide(withAdminRole()));
+export const getServerSideProps = withBasicAuth(withRedux(withUserServerSide(withAdminRole())));

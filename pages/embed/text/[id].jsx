@@ -6,6 +6,7 @@ import { getWidget } from 'redactions/widget';
 import {
   withRedux,
   withUserServerSide,
+  withBasicAuth,
 } from 'hoc/auth';
 
 // components
@@ -15,23 +16,25 @@ export default function EmbedTextPage(props) {
   return (<LayoutEmbedText {...props} />);
 }
 
-export const getServerSideProps = withRedux(withUserServerSide(async ({ store, query }) => {
-  const {
-    dispatch,
-  } = store;
-  const {
-    id,
-    webshot,
-  } = query;
+export const getServerSideProps = withBasicAuth(
+  withRedux(withUserServerSide(async ({ store, query }) => {
+    const {
+      dispatch,
+    } = store;
+    const {
+      id,
+      webshot,
+    } = query;
 
-  dispatch(setEmbed(true));
-  if (webshot) dispatch(setWebshotMode(true));
+    dispatch(setEmbed(true));
+    if (webshot) dispatch(setWebshotMode(true));
 
-  const widget = await dispatch(getWidget(id));
+    const widget = await dispatch(getWidget(id));
 
-  return ({
-    props: ({
-      widget,
-    }),
-  });
-}));
+    return ({
+      props: ({
+        widget,
+      }),
+    });
+  })),
+);

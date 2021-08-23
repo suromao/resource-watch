@@ -6,6 +6,7 @@ import {
   withRedux,
   withUserServerSide,
   withAdminRole,
+  withBasicAuth,
 } from 'hoc/auth';
 
 // Components
@@ -74,4 +75,4 @@ AdminDashboardsPage.propTypes = {
   user: PropTypes.shape({}).isRequired,
 };
 
-export const getServerSideProps = withRedux(withUserServerSide(withAdminRole()));
+export const getServerSideProps = withBasicAuth(withRedux(withUserServerSide(withAdminRole())));

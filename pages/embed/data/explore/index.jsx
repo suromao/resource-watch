@@ -7,6 +7,7 @@ import { setEmbed } from 'redactions/common';
 // hoc
 import {
   withRedux,
+  withBasicAuth,
 } from 'hoc/auth';
 
 // components
@@ -14,7 +15,7 @@ import Explore from 'layout/explore/embed';
 
 const EmbedExplorePage = () => (<Explore />);
 
-export const getServerSideProps = withRedux(async ({ store, query }) => {
+export const getServerSideProps = withBasicAuth(withRedux(async ({ store, query }) => {
   const { dispatch } = store;
   const {
     zoom,
@@ -51,7 +52,7 @@ export const getServerSideProps = withRedux(async ({ store, query }) => {
   return ({
     props: ({}),
   });
-});
+}));
 
 export default connect(
   (state) => ({

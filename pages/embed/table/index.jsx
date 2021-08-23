@@ -6,6 +6,7 @@ import { setEmbed, setWebshotMode } from 'redactions/common';
 import {
   withRedux,
   withUserServerSide,
+  withBasicAuth,
 } from 'hoc/auth';
 
 // components
@@ -15,28 +16,30 @@ export default function EmbedTablePage(props) {
   return (<LayoutEmbedTable {...props} />);
 }
 
-export const getServerSideProps = withRedux(withUserServerSide(async ({
-  store,
-  req,
-  query,
-}) => {
-  const {
-    dispatch,
-  } = store;
-  const {
-    webshot,
-    queryUrl,
-  } = query;
+export const getServerSideProps = withBasicAuth(
+  withRedux(withUserServerSide(async ({
+    store,
+    req,
+    query,
+  }) => {
+    const {
+      dispatch,
+    } = store;
+    const {
+      webshot,
+      queryUrl,
+    } = query;
 
-  dispatch(setEmbed(true));
-  if (webshot) dispatch(setWebshotMode(true));
+    dispatch(setEmbed(true));
+    if (webshot) dispatch(setWebshotMode(true));
 
-  const { data: { data } } = await axios.get(queryUrl);
+    const { data: { data } } = await axios.get(queryUrl);
 
-  return ({
-    props: ({
-      referer: req.headers.referer,
-      tableData: data,
-    }),
-  });
-}));
+    return ({
+      props: ({
+        referer: req.headers.referer,
+        tableData: data,
+      }),
+    });
+  })),
+);

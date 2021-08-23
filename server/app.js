@@ -73,14 +73,14 @@ if (prod && process.env.REDIS_URL) {
 
 // Using basic auth in prod mode
 const { RW_USERNAME, RW_PASSWORD } = process.env;
-if (prod && (RW_USERNAME && RW_PASSWORD)) {
-  server.use(
-    checkBasicAuth({
-      name: RW_USERNAME,
-      pass: RW_PASSWORD,
-    }),
-  );
-}
+// if ((RW_USERNAME && RW_PASSWORD)) {
+//   server.use(
+//     checkBasicAuth({
+//       name: RW_USERNAME,
+//       pass: RW_PASSWORD,
+//     }),
+//   );
+// }
 
 // configure Express
 server.use(cookieParser());

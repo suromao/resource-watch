@@ -4,6 +4,11 @@ import PropTypes from 'prop-types';
 import WidgetDetail from 'layout/app/widget-detail';
 import Error from 'pages/_error';
 
+// hoc
+import {
+  withBasicAuth,
+} from 'hoc/auth';
+
 // services
 import { fetchWidget } from 'services/widget';
 
@@ -21,7 +26,7 @@ WidgetDetailPage.propTypes = {
   }).isRequired,
 };
 
-export const getServerSideProps = async ({ query }) => {
+export const getServerSideProps = withBasicAuth(async ({ query }) => {
   const {
     id,
   } = query;
@@ -33,4 +38,4 @@ export const getServerSideProps = async ({ query }) => {
       widget,
     }),
   });
-};
+});

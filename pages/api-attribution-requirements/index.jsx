@@ -5,6 +5,7 @@ import { getStaticPage } from 'modules/static-pages/actions';
 import {
   withRedux,
   withUserServerSide,
+  withBasicAuth,
 } from 'hoc/auth';
 
 // components
@@ -14,10 +15,10 @@ export default function AttributionRequirementsPage() {
   return (<LayoutAttributionRequirements />);
 }
 
-export const getServerSideProps = withRedux(withUserServerSide(async ({ store }) => {
+export const getServerSideProps = withBasicAuth(withRedux(withUserServerSide(async ({ store }) => {
   await store.dispatch(getStaticPage('api-attribution-requirements'));
 
   return ({
     props: ({}),
   });
-}));
+})));

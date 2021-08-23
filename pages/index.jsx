@@ -5,6 +5,7 @@ import { getLatestPosts, getSpotlightPosts } from 'modules/blog/actions';
 import {
   withRedux,
   withUserServerSide,
+  withBasicAuth,
 } from 'hoc/auth';
 
 // components
@@ -14,7 +15,7 @@ export default function HomePage() {
   return (<LayoutHome />);
 }
 
-export const getServerSideProps = withRedux(withUserServerSide(async ({ store }) => {
+export const getServerSideProps = withBasicAuth(withRedux(withUserServerSide(async ({ store }) => {
   const { getState, dispatch } = store;
   const {
     blog: {
@@ -36,4 +37,4 @@ export const getServerSideProps = withRedux(withUserServerSide(async ({ store })
   return ({
     props: ({}),
   });
-}));
+})));

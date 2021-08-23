@@ -6,6 +6,7 @@ import { setEmbed, setWebshotMode } from 'redactions/common';
 import {
   withRedux,
   withUserServerSide,
+  withBasicAuth,
 } from 'hoc/auth';
 
 // components
@@ -15,26 +16,28 @@ export default function EmbedWidgetPage(props) {
   return (<LayoutEmbedWidget {...props} />);
 }
 
-export const getServerSideProps = withRedux(withUserServerSide(async ({ store, query }) => {
-  const { dispatch, getState } = store;
-  const {
-    user,
-  } = getState();
-  const {
-    id,
-    webshot,
-  } = query;
+export const getServerSideProps = withBasicAuth(
+  withRedux(withUserServerSide(async ({ store, query }) => {
+    const { dispatch, getState } = store;
+    const {
+      user,
+    } = getState();
+    const {
+      id,
+      webshot,
+    } = query;
 
-  dispatch(setEmbed(true));
-  if (webshot) dispatch(setWebshotMode(true));
+    dispatch(setEmbed(true));
+    if (webshot) dispatch(setWebshotMode(true));
 
-  await dispatch(getWidget(id, { includes: ['metadata'].join(',') }));
+    await dispatch(getWidget(id, { includes: ['metadata'].join(',') }));
 
-  if (!webshot) {
-    if (user && user.id) dispatch(checkIfFavorited(id));
-  }
+    if (!webshot) {
+      if (user && user.id) dispatch(checkIfFavorited(id));
+    }
 
-  return ({
-    props: ({}),
-  });
-}));
+    return ({
+      props: ({}),
+    });
+  })),
+);

@@ -5,6 +5,7 @@ import { fetchStaticData } from 'layout/get-involved/get-involved-actions';
 import {
   withRedux,
   withUserServerSide,
+  withBasicAuth,
 } from 'hoc/auth';
 
 // components
@@ -14,7 +15,7 @@ export default function GetInvolvedPage() {
   return (<GetInvolved />);
 }
 
-export const getServerSideProps = withRedux(withUserServerSide(async ({ store }) => {
+export const getServerSideProps = withBasicAuth(withRedux(withUserServerSide(async ({ store }) => {
   const { dispatch } = store;
 
   await dispatch(fetchStaticData('get-involved'));
@@ -22,4 +23,4 @@ export const getServerSideProps = withRedux(withUserServerSide(async ({ store })
   return ({
     props: ({}),
   });
-}));
+})));
